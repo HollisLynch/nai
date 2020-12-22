@@ -95,10 +95,10 @@ auto genetic_alg = [](auto calculate_pop_fitness, auto generate_init_pop, auto s
             return a.fit > b.fit;
         });
         auto elite_pop = population;
-        population = elite_pop;
         for (int i = 0; i<elite; i++) {
             elite_pop.push_back(population.at(i));
         }
+        population = elite_pop;
         auto parents = selection(population);
         auto offspring = crossover(parents);
         offspring = mutation(offspring);

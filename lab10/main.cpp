@@ -86,11 +86,19 @@ auto decode = [](specimen_t v) {
     return res;
 };
 
-auto genetic_alg = [](auto calculate_pop_fitness, auto generate_init_pop, auto selection, auto crossover, auto mutation) {
+auto genetic_alg = [](auto calculate_pop_fitness, auto generate_init_pop, auto selection, auto crossover, auto mutation, int elite) {
     auto population = generate_init_pop();
     population = calculate_pop_fitness(population);
     for (int iteration = 0; iteration < 100; iteration++)
     {
+        sort(population.begin(), population.end(), [](auto a, auto b) {
+            return a.fit > b.fit;
+        });
+        auto elite_pop = population;
+        population = elite_pop;
+        for (int i = 0; i<elite; i++) {
+            elite_pop.push_back(population.at(i));
+        }
         auto parents = selection(population);
         auto offspring = crossover(parents);
         offspring = mutation(offspring);
@@ -98,6 +106,9 @@ auto genetic_alg = [](auto calculate_pop_fitness, auto generate_init_pop, auto s
         sort(population.begin(), population.end(), [](auto a, auto b) {
             return a.fit > b.fit;
         });
+        for (int i = 0; i<elite; i++) {
+            elite_pop.pop_back();
+        }
         for (int i = 0; i<population.size(); i++) {
             printf("[%d] x:%f, y:%f, goal = %f\n", i, decode(population.at(i)).at(0), decode(population.at(i)).at(1), fitness(decode(population.at(i))));
         }
@@ -185,7 +196,7 @@ int main(int argc, char** argv) {
         return xy;
     };
 
-    genetic_alg(calculate_pop_fitness, generate_init_pop, selection, crossover_one_point, mutation);
+    genetic_alg(calculate_pop_fitness, generate_init_pop, selection, crossover_one_point, mutation, 1);
 
     return 0;
 }

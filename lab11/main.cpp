@@ -23,8 +23,9 @@ public:
 
     Neuron();
     vector<double> set_weights(int n);
-    void train(int epochs);
-    void test(vector<double> weights);
+    vector<double> get_weights();
+    vector<double> set_inputs();
+    double sum(vector<double> weights, vector<double> inputs);
     void count_value();
 };
 
@@ -41,18 +42,26 @@ vector<double> Neuron::set_weights(int n) {
     return weights;
 }
 
-void Neuron::train(int epochs) {
-    for (int i = 0; i<epochs; i++) {
+double Neuron::sum(vector<double> weights, vector<double> inputs) {
+    double sum = 0;
+    for (int i = 0; i<inputs.size(); i++) {
+        sum += inputs[i]*weights[i];
     }
-}
-
-void Neuron::test(vector<double> weights) {
+    return sum;
 }
 
 void Neuron::count_value() {
     for (int i = 0; i<inputs.size(); i++) {
-        value = weights[i]*inputs[i];
+        value = Activation::f_tanh(sum(weights, inputs));
     }
+}
+
+vector<double> Neuron::get_weights() {
+    return weights;
+}
+
+vector<double> Neuron::set_inputs() {
+    inputs = {0, 0, 0};
 }
 
 int main() {

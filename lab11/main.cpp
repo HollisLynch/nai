@@ -19,12 +19,13 @@ class Neuron {
 public:
     vector<double> weights;
     vector<double> inputs;
+    double value;
 
     Neuron();
-    double fprim(double x);
     vector<double> set_weights(int n);
     void train(int epochs);
     void test(vector<double> weights);
+    void count_value();
 };
 
 Neuron::Neuron() {
@@ -40,16 +41,18 @@ vector<double> Neuron::set_weights(int n) {
     return weights;
 }
 
-double Neuron::fprim(double x) {
-    return pow(1-Activation::f_tanh(x), 2);
-}
-
 void Neuron::train(int epochs) {
     for (int i = 0; i<epochs; i++) {
     }
 }
 
 void Neuron::test(vector<double> weights) {
+}
+
+void Neuron::count_value() {
+    for (int i = 0; i<inputs.size(); i++) {
+        value = weights[i]*inputs[i];
+    }
 }
 
 int main() {
